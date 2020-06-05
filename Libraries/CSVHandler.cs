@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Runtime.InteropServices;
 
 namespace QA_Registracija.Libraries
 {
@@ -23,10 +24,16 @@ namespace QA_Registracija.Libraries
             return this.Sheet;
         }
         public void Close()
-
         {
+            this.Workbook.Close();
             this.App.Quit();
+
+            Marshal.ReleaseComObject(this.Workbook);
+            Marshal.ReleaseComObject(this.App);
+
+            this.Workbook = null;
+            this.App = null;
         }
-       
+
     }
 }

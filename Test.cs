@@ -12,17 +12,19 @@ using EC = SeleniumExtras.WaitHelpers.ExpectedConditions;
 using Excel = Microsoft.Office.Interop.Excel;
 using QA_Registracija.PageObject;
 using QA_Registracija.Libraries;
+using System.CodeDom;
 
 namespace QA_Registracija
 {
     class Test
     {
-        IWebDriver driver;
+        private IWebDriver driver;
+        private CSVHandler CSV,M;
         [Test]
         public void QATest()
         {
-            CSVHandler CSV = new CSVHandler();
-            Excel.Worksheet Sheet = CSV.OpenCSV(@"C:\Users\Milijana\Desktop\ddt6.csv");
+            //CSVHandler CSV = new CSVHandler();
+            Excel.Worksheet Sheet = this.CSV.OpenCSV(@"C:\Users\Milijana\Desktop\ddt6.csv");
             int rows = Sheet.UsedRange.Rows.Count;
             int columns = Sheet.UsedRange.Columns.Count;
             //TestContext.WriteLine("Broj redova: {0} Broj kolona: {1}", rows, columns);
@@ -33,6 +35,7 @@ namespace QA_Registracija
             for (int i = 2; i <= rows; i++)
             {
                 TestContext.Write("Name of Test Case: {0},Description: {1},Expected: {2}    ", Sheet.Cells[i, 1].Value, Sheet.Cells[i, 2].Value, Sheet.Cells[i, 3].Value);
+                FileManagment.Scrivi("Name of Test Case: " + Sheet.Cells[i, 1].Value.ToString());
                 name = Sheet.Cells[i, 1].Value;
                 description = Sheet.Cells[i, 2].Value;
                 expected = Sheet.Cells[i, 3].Value;
@@ -52,10 +55,12 @@ namespace QA_Registracija
                     if(expected=="pass")
                     {
                         TestContext.WriteLine("Successful Test!!!");
+                        FileManagment.Scrivere("Successful Test!!!");
                     }
                     else
                     {
                         TestContext.WriteLine("The test failed!!!");
+                        FileManagment.Scrivere("The test failed!!!");
                         IsExpected = false;
                     }
                 }
@@ -64,10 +69,12 @@ namespace QA_Registracija
                     if (expected == "fail")
                     {
                         TestContext.WriteLine("Successful Test!!!");
+                        FileManagment.Scrivere("Successful Test!!!");
                     }
                     else
                     {
                         TestContext.WriteLine("The test failed!!!");
+                        FileManagment.Scrivere("Successful Test!!!");
                         IsExpected = false;
                     }
                 }
@@ -86,16 +93,143 @@ namespace QA_Registracija
             CSV.Close();
 
         }
+        [Test]
+        public void ShopingTest()
+        {
+            Excel.Worksheet Sheet = this.CSV.OpenCSV(@"C:\Users\Milijana\Desktop\ddt5.csv");
+            int rows = Sheet.UsedRange.Rows.Count;
+            int columns = Sheet.UsedRange.Columns.Count;
+            string name;
+            string username;
+            string password;
+            for (int i = 2; i<= rows; i++)
+            {
+                name = Sheet.Cells[i, 1].Value;
+                username = Sheet.Cells[i, 2].Value;
+                password = Sheet.Cells[i, 3].Value;
+                ShopHomePage home = new ShopHomePage(driver);
+                home.GoToPage();
+                ShopLoginPage SLP;
+                SLP = home.ClickOnLoginLink();
+                home = SLP.Login(username, password);
+                string Actualy = "Prosao";
+                if (home.Welcome != null)
+                {
+                    home.ClickLogout();
+
+                }
+                else
+                {
+
+                    Actualy = "Nije prosao";
+                }
+                TestContext.WriteLine("Ime testa: {0}, Ussername je: {1},Password je: {2},Stanje  {3}", name, username, password, Actualy);
+                FileManagment.Scrivere("Ime: " + name + "Username: " + username + "Password:" + password + "Stanje" + Actualy);
+            }
+        this.CSV.Close();
+        }
+        [Test]
+        public void FinallyShop()
+        {
+            Excel.Worksheet Sheet = this.CSV.OpenCSV(@"C:\Users\Milijana\Desktop\ddt5.csv");
+            int rows = Sheet.UsedRange.Rows.Count;
+            int columns = Sheet.UsedRange.Columns.Count;
+            TestContext.WriteLine("broj redova {0}, broj kolona{1}", rows, columns);
+            this.CSV.Close();
+            this.CSV = null;
+            Excel.Worksheet MSheet = M.OpenCSV(@"C:\Users\Milijana\Desktop\miki.csv");
+            // rows = Sheet.UsedRange.Rows.Count;
+              //columns = Sheet.UsedRange.Columns.Count;
+            //TestContext.WriteLine("broj redova {0}, broj kolona{1}", rows, columns);
+            CSV.Close();
+            /*Excel.Worksheet Sheet = this.CSV.OpenCSV(@"C:\Users\Milijana\Desktop\ddt5.csv");
+            int rows = Sheet.UsedRange.Rows.Count;
+            int columns = Sheet.UsedRange.Columns.Count;
+            string name;
+            string username;
+            string password;
+            string quantity;
+            string shipping;
+            
+            
+             name = Sheet.Cells[2, 1].Value;
+             username = Sheet.Cells[2, 2].Value;
+             password = Sheet.Cells[2, 3].Value;
+             this.CSV.Close();
+             this.CSV = null;
+             /*ShopHomePage home = new ShopHomePage(driver);
+             home.GoToPage();
+             ShopLoginPage SLP;
+             SLP = home.ClickOnLoginLink();
+             home = SLP.Login("aaa", "aaa");
+            //if(home.Welcome!=null)
+            //{
+                Excel.Worksheet Sheet = this.CSV.OpenCSV(@"C:\Users\Milijana\Desktop\miki.csv");
+               int rows1 = Sheet.UsedRange.Rows.Count;
+                int columns1 = Sheet.UsedRange.Columns.Count;
+                TestContext.WriteLine("broj redova {0}, broj kolona{1}", rows1, columns1);
+                for (int i = 2; i <= rows1; i++)
+                {   ShopHomePage home = new ShopHomePage(driver);
+                    home.GoToPage();
+                    ShopLoginPage SLP;
+                    SLP = home.ClickOnLoginLink();
+                    home = SLP.Login("aaa", "aaa");
+                   string name = Sheet.Cells[i, 1].Value;
+                   string  quantity = Convert.ToString(Sheet.Cells[i, 2].Value);
+                   string shipping = Convert.ToString(Sheet.Cells[i, 3].Value);
+                    string rezultat;
+                    Porudzbina P;
+                    home.UnesiKolicinu(quantity);
+                    P = home.ClickOrder();
+                    rezultat = P.Shipping.Text;
+                    System.Threading.Thread.Sleep(1000);
+                    TestContext.WriteLine("Rezultat je {0}", rezultat);
+                    P.ClickCheckout();
+                   home.ClickLogout();
+                
+            }
+
+            //}
+            //else
+            /*{
+                TestContext.WriteLine("Neuspesno");
+                Assert.Fail("Neuspesan LogIn");
+            }*/
+            this.CSV.Close();
+            this.CSV = null;
+
+        }
         [SetUp]
         public void Setup()
         {
             driver = new FirefoxDriver();
             driver.Manage().Window.Maximize();
+            this.CSV = new CSVHandler();
+            M = new CSVHandler();
+            
         }
         [TearDown]
        public void TearDown()
+        {   if (this.driver != null)
+            {
+                this.driver.Close();
+            }
+        //if (this.CSV!=null)
+          //{
+               // this.CSV.Close();
+            //}
+
+        }
+        private void LogLine(string Message)
         {
-            driver.Close();
+            FileManagment.Scrivere(Message);
+            TestContext.WriteLine(Message);
+        }
+
+        private void Log(string Message)
+        {
+             FileManagment.Scrivi(Message);
+            TestContext.Write(Message);
         }
     }
 }
