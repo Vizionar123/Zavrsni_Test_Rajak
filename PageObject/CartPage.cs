@@ -12,54 +12,39 @@ using Excel = Microsoft.Office.Interop.Excel;
 using QA_Registracija.PageObject;
 using System.Threading;
 using NUnit.Framework;
+using System.Text.RegularExpressions;
 
 namespace QA_Registracija.PageObject
 {
-    class Porudzbina
+    class CartPage
     {
         private IWebDriver driver;
         private WebDriverWait wait;
-        public Porudzbina(IWebDriver driver)
+        public CartPage(IWebDriver driver)
         {
             this.driver = driver;
             this.wait = new WebDriverWait(driver, TimeSpan.FromSeconds(70));
         }
-        public IWebElement Shipping
+        public UInt64 TotalColumn
         {
             get
             {
                 IWebElement element = null;
+                UInt64 num=0;
                 try
                 {
-                    element = this.driver.FindElement(By.XPath("//tr[contains(.,'Shipping')]//td[3]"));
+                    element = this.driver.FindElement(By.XPath("//tr[contains(.,'Shipping')]//following-sibling::tr"));
+                    string number = Regex.Replace(element.Text, "[^0-9]", "");
+                    num = Convert.ToUInt64(number);
                 }
                 catch (Exception)
                 {
-                    element = null;
                 }
-                return element;
+                return num;
             }
         }
-        public IWebElement Checkout
-        {
-            get
-            {
-                IWebElement element = null;
-                try
-                {
-                    element = this.driver.FindElement(By.Name("checkout"));
-                }
-                catch (Exception)
-                {
-                    element = null;
-                }
-                return element;
-            }
-        }
-        public void ClickCheckout()
-        {
-            this.Checkout?.Click();
-        }
+        
+
         public IWebElement ButtonContinueShopping
         {
             get
@@ -75,11 +60,35 @@ namespace QA_Registracija.PageObject
                 return element;
             }
         }
+
+        public IWebElement ButtonCheckout
+        {
+            get
+            {
+                IWebElement element = null;
+                try
+                {
+                    element = this.driver.FindElement(By.Name("checkout"));
+                }
+                catch (Exception)
+                {
+                }
+                return element;
+            }
+        }
+
         public ShopHomePage ClickContinueShopping()
         {
             this.ButtonContinueShopping?.Click();
             wait.Until(EC.ElementIsVisible(By.XPath("//h2[contains(text(), 'Welcome back,')]")));
             return new ShopHomePage(this.driver);
+        }
+
+        public ConfirmationPage ClickCheckout()
+        {
+            this.ButtonCheckout?.Click();
+            wait.Until(EC.ElementIsVisible(By.XPath("//h2[contains(text(), 'You have successfully placed your order.')]")));
+            return new ConfirmationPage(this.driver);
         }
     }
 }

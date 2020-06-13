@@ -9,7 +9,7 @@ namespace QA_Registracija.Libraries
 {
     class FileManagment
     {
-        private static string fileName = @"C:\Users\Milijana\Desktop\izlaz1.log";
+        private static string fileName = @"C:\Users\Milijana\Desktop\Milijana_izvestaj.log";
         public static void Scrivere(string IlMessagio)
         {
             using(StreamWriter matita= new StreamWriter(fileName,true))

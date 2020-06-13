@@ -65,7 +65,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Libraries\FileManagment.cs" />
-    <Compile Include="PageObject\HomePage.cs" />
+    <Compile Include="PageObject\CartPage.cs" />
+    <Compile Include="PageObject\ConfirmationPage.cs" />
+    <Compile Include="PageObject\HistoryPage.cs" />
     <Compile Include="PageObject\Porudzbina.cs" />
     <Compile Include="PageObject\Register.cs" />
     <Compile Include="PageObject\ShopHomePage.cs" />

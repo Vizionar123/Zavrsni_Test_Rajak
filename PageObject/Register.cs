@@ -143,7 +143,7 @@ namespace QA_Registracija.PageObject
             }
 
         }
-        public HomePage ClickButtonRegister(string FirstName,string LastName,string Email,string UserName,string Password, string ConfirmPassword)
+        public ShopHomePage ClickButtonRegister(string FirstName,string LastName,string Email,string UserName,string Password, string ConfirmPassword)
         {
             this.FirstName?.SendKeys(FirstName);
             this.LastName?.SendKeys(LastName);
@@ -152,7 +152,7 @@ namespace QA_Registracija.PageObject
             this.Password?.SendKeys(Password);
             this.ConfirmPassword?.SendKeys(ConfirmPassword);
             this.ButtonRegister?.Click();
-            return new HomePage(this.driver);
+            return new ShopHomePage(this.driver);
 
         }
     }

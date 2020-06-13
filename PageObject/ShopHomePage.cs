@@ -60,6 +60,48 @@ namespace QA_Registracija.PageObject
                 return element;
             }
         }
+        public IWebElement MestoZaSelectEnterprise
+        {
+            get
+            {
+                IWebElement element = null;
+                try
+                {
+                    //wait.Until(EC.ElementIsVisible(By.XPath("")));
+                    element = this.driver.FindElement(By.XPath("//h3[contains(text(),'enterprise')]//parent::div//following-sibling::div//select"));
+                }
+                catch (Exception)
+                {
+                }
+                return element;
+            }
+        }
+        public void UnesiKolicinuEnterprice(string kol)
+        {
+            SelectElement select = new SelectElement(this.MestoZaSelectEnterprise);
+            select.SelectByText(kol);
+        }
+        public IWebElement DugmeOrderEnterprise
+        {
+            get
+            {
+                IWebElement element = null;
+                try
+                {
+                    //wait.Until(EC.ElementIsVisible(By.XPath("")));
+                    element = this.driver.FindElement(By.XPath("//h3[contains(text(),'enterprise')]//parent::div//following-sibling::div//input[@type='submit']"));
+                }
+                catch (Exception)
+                {
+                }
+                return element;
+            }
+        }
+        public Porudzbina ClickOrderEnterprise()
+        {
+            this.DugmeOrderEnterprise?.Click();
+            return new Porudzbina(this.driver);
+        }
         public IWebElement DugmeOrder
         {
             get
@@ -120,6 +162,28 @@ namespace QA_Registracija.PageObject
                 return element;
             }
         }
+        public IWebElement History
+        {
+            get
+            {
+                IWebElement element = null;
+                try
+                {
+                    element = this.driver.FindElement(By.XPath("//a[contains(.,'history')]"));
+                }
+                catch (Exception)
+                {
+                    element = null;
+                }
+                return element;
+            }
+        }
+        public HistoryPage ClickHistory()
+        {
+            this.History?.Click();
+            return new HistoryPage(this.driver);
+        }
+
         public ShopLoginPage ClickOnLoginLink()
         {
             this.LinkLogin?.Click();
@@ -130,6 +194,68 @@ namespace QA_Registracija.PageObject
         {
             this.DugmeOrder?.Click();
             return new Porudzbina(this.driver);
+        }
+        public IWebElement LinkViewCart
+        {
+            get
+            {
+                IWebElement element;
+                try
+                {
+                    element = this.driver.FindElement(By.PartialLinkText("View shopping cart"));
+                }
+                catch (Exception)
+                {
+                    element = null;
+                }
+                return element;
+            }
+        }
+        public CartPage ClickOnViewCart()
+        {
+            this.LinkViewCart?.Click();
+            wait.Until(EC.ElementIsVisible(By.XPath("//a[contains(.,'cart')]")));
+            return new CartPage(this.driver);
+        }
+        public IWebElement Reg
+        {
+            get
+            {
+                IWebElement element = null;
+                try
+                {
+                    element = this.driver.FindElement(By.XPath("//a[@href='/register']"));
+                }
+                catch (Exception)
+                {
+                    element = null;
+                }
+                return element;
+            }
+
+        }
+        public IWebElement Uspeh
+        {
+            get
+            {
+                IWebElement element = null;
+                try
+                {
+                    element = this.driver.FindElement(By.XPath("//strong[text()='Uspeh!']"));
+                }
+                catch (Exception)
+                {
+                    element = null;
+                }
+                return element;
+            }
+
+        }
+        public Register ClicReg()
+        {
+            this.Reg?.Click();
+            wait.Until(EC.ElementIsVisible(By.XPath("//a[contains(text(),'Shop')]")));
+            return new Register(this.driver);
         }
 
     }
