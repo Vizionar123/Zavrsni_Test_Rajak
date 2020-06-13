@@ -31,7 +31,7 @@ namespace QA_Registracija
             for (int i = 2; i <= rows; i++)
             {
                 TestContext.Write("Name of Test Case: {0},Description: {1},Expected: {2}    ", Sheet.Cells[i, 1].Value, Sheet.Cells[i, 2].Value, Sheet.Cells[i, 3].Value);
-                FileManagment.Scrivi("Name of Test Case: " + Sheet.Cells[i, 1].Value.ToString()+"  Description: "+ Sheet.Cells[i,2].Value.ToString()+"  Expected: "+ Sheet.Cells[i,3].Value);
+                FileManagment.Scrivi("Name of Test Case: " + Sheet.Cells[i, 1].Value.ToString() + "  Description: " + Sheet.Cells[i, 2].Value.ToString() + "  Expected: " + Sheet.Cells[i, 3].Value);
                 name = Sheet.Cells[i, 1].Value;
                 description = Sheet.Cells[i, 2].Value;
                 expected = Sheet.Cells[i, 3].Value;
@@ -45,10 +45,10 @@ namespace QA_Registracija
                 pocetna.GoToPage();
                 Register R;
                 R = pocetna.ClicReg();
-                pocetna = R.ClickButtonRegister(FirstName,LastName ,Email,UN,P,CP);
+                pocetna = R.ClickButtonRegister(FirstName, LastName, Email, UN, P, CP);
                 if (pocetna.Uspeh != null)
                 {
-                    if(expected=="pass")
+                    if (expected == "pass")
                     {
                         TestContext.WriteLine("  Successful Test!!!  ");
                         FileManagment.Scrivere("  Successful Test!!!  ");
@@ -74,11 +74,11 @@ namespace QA_Registracija
                         IsExpected = false;
                     }
                 }
-                
+
                 TestContext.WriteLine("----------------------------------------------------------------------------------------------------------------------------------------------");
                 FileManagment.Scrivere("---------------------------------------------------------------------------------------------------------------------------------------------");
             }
-            if(IsExpected==true)
+            if (IsExpected == true)
             {
                 Assert.Pass("Great job!!!");
             }
@@ -92,21 +92,21 @@ namespace QA_Registracija
         [Test]
         public void ShopingTest()
         {
-                string username="M";
-                string password="ML";
-                UInt64 X = 0;
-                UInt64 Y = 0;
-                ShopHomePage home = new ShopHomePage(driver);
-                home.GoToPage();
-                ShopLoginPage SLP;
-                SLP = home.ClickOnLoginLink();
-                home = SLP.Login(username, password);
-                if (home.Welcome != null)
-                {
+            string username = "M";
+            string password = "ML";
+            UInt64 X = 0;
+            UInt64 Y = 0;
+            ShopHomePage home = new ShopHomePage(driver);
+            home.GoToPage();
+            ShopLoginPage SLP;
+            SLP = home.ClickOnLoginLink();
+            home = SLP.Login(username, password);
+            if (home.Welcome != null)
+            {
                 Porudzbina P;
                 home.UnesiKolicinu("3");
                 P = home.ClickOrder();
-                home=P.ClickContinueShopping();
+                home = P.ClickContinueShopping();
                 home.UnesiKolicinuEnterprice("3");
                 P = home.ClickOrderEnterprise();
                 home = P.ClickContinueShopping();
@@ -122,22 +122,27 @@ namespace QA_Registracija
 
                 if (X == Y)
                 {
-                    
-                       TestContext.WriteLine("Successful Test!!!{0}={1}",X,Y);
-                       Assert.Pass("Successful Test!!!");
-                }
-            
 
+                    TestContext.WriteLine("Successful Test!!!{0}={1}", X, Y);
+                    Assert.Pass("Successful Test!!!");
                 }
+
+
+            
                 else
                 {
-                     Assert.Fail("The test is failed");
-                     TestContext.WriteLine("The test is failed");
+                   Assert.Fail("The test is failed");
+                   TestContext.WriteLine("The test is failed");
                 }
-               
+            }
+            else
+            {
+                Assert.Fail("User not registered");
+            }
+                
             
+        }   
         
-        }
       
         [SetUp]
         public void Setup()
